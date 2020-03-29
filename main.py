@@ -96,6 +96,12 @@ def root(params):
         'url':      common.plugin.get_url(action='menu_categories')
     })
 
+
+    listing.append({
+        'label':    'Mon PBLV',
+        'url':      common.plugin.get_url(action='menu_pblv')
+    })
+    
     listing.append({
         'label':    'Mon Auvio',
         'url':      common.plugin.get_url(action='menu_favorites')
@@ -270,6 +276,30 @@ def menu_channels(params):
     if channels:
         for channel in channels:
             li = channel_to_kodi_item(channel)
+            listing.append(li)  # Item label
+
+    return common.plugin.create_listing(
+        listing,
+        #succeeded = True, #if False Kodi won’t open a new listing and stays on the current level.
+        #update_listing = False, #if True, Kodi won’t open a sub-listing but refresh the current one. 
+        #cache_to_disk = True, #cache this view to disk.
+        #sort_methods = None, #he list of integer constants representing virtual folder sort methods.
+        #view_mode = None, #a numeric code for a skin view mode. View mode codes are different in different skins except for 50 (basic listing).
+        #content = None #string - current plugin content, e.g. ‘movies’ or ‘episodes’.
+    )
+
+@common.plugin.action()
+def menu_pblv(params):
+    
+    listing = []
+    url_params = {
+        'program_id':   39
+    }
+    episodes = api.get_program_list(url_params)
+
+    if episodes:
+        for episode in episodes:
+            li = channel_to_kodi_item(episode)
             listing.append(li)  # Item label
 
     return common.plugin.create_listing(
