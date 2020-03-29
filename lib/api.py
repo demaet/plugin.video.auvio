@@ -274,3 +274,57 @@ def get_drm_media_auth(user_token,mid,is_live=False):
             
         
         return None
+    
+   
+@common.plugin.cached(common.cachetime_app_settings)
+def get_channel_list(url_params={}):
+    
+    #Get ALL the channels from the API (not only the menu ones), including radios.  Can be filtered through optionnal url parameters.
+    
+    #url params
+    url_params_default = {
+        'partner_key':  common.cryo_partner_key,
+        'v':            7,
+    }
+    
+    url_params = utils.parse_dict_args(url_params_default,url_params)
+
+    common.plugin.log("api.get_channel_list")
+
+    url = common.cryo_base_url + 'epg/channellist'
+
+    json_data = utils.request_url(url,url_params)
+    if not json_data:
+        return
+
+    data = json.loads(json_data)
+
+    return data
+
+
+@common.plugin.cached(common.cachetime_app_settings)
+def get_program_list(url_params={}):
+    
+    #Get ALL the channels from the API (not only the menu ones), including radios.  Can be filtered through optionnal url parameters.
+    
+    #url params
+    url_params_default = {
+        'partner_key':  common.cryo_partner_key,
+        'v':            7,
+        'include_drm':  'true',
+        'content_type': 'complete'
+    }
+    
+    url_params = utils.parse_dict_args(url_params_default,url_params)
+
+    common.plugin.log("api.get_program_list")
+
+    url = common.cryo_base_url + 'media/objectlist'
+
+    json_data = utils.request_url(url,url_params)
+    if not json_data:
+        return
+
+    data = json.loads(json_data)
+
+    return data
